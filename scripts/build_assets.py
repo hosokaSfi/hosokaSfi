@@ -64,10 +64,14 @@ STACK = {
         ("Docker", "skill", "docker"), ("Compose", "skill", "docker"),
         ("Makefile", "text", "Mk|#e4e4e7|#3f3f46"), ("pnpm", "skill", "pnpm"),
     ]),
-    "ai": ("AI", "#c084fc", "Gemini API を Python / FastAPI から組み込み", [
+    "ai": ("AI", "#c084fc", "Gemini API 組み込み / Claude Code × git worktree で並行開発", [
         ("Gemini API", "si", "googlegemini"), ("Claude Code", "si", "claude"),
+        ("git worktree", "skill", "git"),
         ("Cursor", "si", "cursor"), ("Copilot", "si", "githubcopilot"),
         ("Ollama", "si", "ollama"),
+    ]),
+    "motion": ("Motion / 3D", "#38bdf8", "勉強中", [
+        ("Remotion", "text", "R|#ffffff|#0b84f3"), ("Three.js", "skill", "threejs"),
     ]),
     "task": ("Task Management", "#94a3b8", "", [
         ("Notion", "skill", "notion"), ("Backlog", "text", "B|#ffffff|#42ce9f"),
@@ -177,7 +181,8 @@ CODE = [
     [("  role", "#7dd3fc"), (": ", "#a1a1aa"), ('"Software Engineer"', "#86efac"), (",", "#a1a1aa")],
     [("  builds", "#7dd3fc"), (": [", "#a1a1aa"), ('"web"', "#86efac"), (", ", "#a1a1aa"), ('"mobile"', "#86efac"), (", ", "#a1a1aa"), ('"api"', "#86efac"), ("],", "#a1a1aa")],
     [("  stack", "#7dd3fc"), (": [", "#a1a1aa"), ('"TypeScript"', "#86efac"), (", ", "#a1a1aa"), ('"Next.js"', "#86efac"), (", ", "#a1a1aa"), ('"NestJS"', "#86efac"), ("],", "#a1a1aa")],
-    [("  fuel", "#7dd3fc"), (": ", "#a1a1aa"), ('"tea"', "#86efac"), (",", "#a1a1aa")],
+    [("  workflow", "#7dd3fc"), (": ", "#a1a1aa"), ('"Claude Code × git worktree"', "#86efac"), (",", "#a1a1aa")],
+    [("  writes", "#7dd3fc"), (": ", "#a1a1aa"), ('"zenn.dev/hopetekigozaru"', "#86efac"), (",", "#a1a1aa")],
     [("} ", "#a1a1aa"), ("as const", "#c084fc"), (";", "#a1a1aa")],
 ]
 
@@ -188,17 +193,17 @@ def build_header() -> str:
     code_lines = []
     for i, tokens in enumerate(CODE):
         spans = "".join(f'<tspan fill="{c}">{escape(t)}</tspan>' for t, c in tokens)
-        y = cy + 92 + i * 27
+        y = cy + 86 + i * 27
         code_lines.append(
             f'<g class="rise" style="animation-delay:{1.0 + i * .18:.2f}s">'
             f'<text x="{cx + 24}" y="{y}" class="mono" font-size="13" fill="#52525b" text-anchor="end" dx="8">{i + 1}</text>'
             f'<text x="{cx + 48}" y="{y}" class="mono" font-size="14" xml:space="preserve">{spans}</text></g>')
-    last_y = cy + 92 + (len(CODE) - 1) * 27
+    last_y = cy + 86 + (len(CODE) - 1) * 27
     caret_x = cx + 48 + len("} as const;") * 8.43 + 4
 
     return f'''<svg xmlns="http://www.w3.org/2000/svg" width="{w}" height="{h}" viewBox="0 0 {w} {h}" role="img" aria-labelledby="t d">
   <title id="t">NOZOMU — Software Engineer</title>
-  <desc id="d">Web / Mobile / API。ようこそ。お茶でも飲みながら、ゆっくり見ていってください。</desc>
+  <desc id="d">Web / Mobile / API。Claude Code × git worktree で並行開発。個人開発で undug をつくっている。</desc>
   <defs>
     {common_defs(w, h)}
     <linearGradient id="titleFill" x1="0" y1="0" x2="0" y2="1"><stop offset=".15" stop-color="#ffffff"/><stop offset="1" stop-color="#a1a1aa"/></linearGradient>
@@ -233,7 +238,7 @@ def build_header() -> str:
     </g>
     <g class="rise" style="animation-delay:.65s">
       <rect x="72" y="350" width="28" height="1.5" fill="#818cf8"/>
-      <text x="112" y="356" class="sans" font-size="14" fill="#71717a">ようこそ。お茶でも飲みながら、ゆっくり見ていってください。</text>
+      <text x="112" y="356" class="sans" font-size="14" fill="#a1a1aa">Claude Code × git worktree で並行開発<tspan fill="#52525b">  /  </tspan>個人開発 undug</text>
     </g>
 
     <g class="rise" style="animation-delay:.5s">
@@ -259,7 +264,7 @@ def build_stack() -> str:
         (270, [("frontend", 2, 6), ("backend", 2, 5)]),
         (250, [("web", 1, 2), ("vue", 1, 2), ("mobile", 1, 2), ("database", 1, 2)]),
         (270, [("aws", 2, 4), ("devops", 2, 3)]),
-        (196, [("ai", 2, 5), ("task", 2, 3)]),
+        (250, [("ai", 2, 3), ("motion", 1, 2), ("task", 1, 2)]),
     ]
     h = top + sum(rh for rh, _ in rows_spec) + gap * (len(rows_spec) - 1) + pad
 
@@ -325,6 +330,9 @@ ICON_PATHS = {
     "monitor": '<rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>',
     "server": '<rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><path d="M6 6h.01M6 18h.01"/>',
     "cloud": '<path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/>',
+    "branch": '<line x1="6" x2="6" y1="3" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/>',
+    "clapper": '<path d="M20.2 6 3 11l-.9-2.4c-.3-1.1.3-2.2 1.3-2.5l13.5-4c1.1-.3 2.2.3 2.5 1.3Z"/><path d="m6.2 5.3 3.1 3.9M12.4 3.4l3.1 4"/><path d="M3 11h18v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/>',
+    "music": '<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>',
     "sparkles": '<path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/>',
 }
 
@@ -333,21 +341,92 @@ ABOUT_CARDS = [
     ("Frontend", "monitor", "#818cf8", ("React / Next.js を中心に、", "Vue.js や Expo のアプリも。"), ("Next.js", "Vue.js", "Expo")),
     ("Backend", "server", "#f472b6", ("Laravel・NestJS・FastAPI で", "API と業務ロジックを実装。"), ("Laravel", "NestJS", "FastAPI")),
     ("Infra", "cloud", "#fbbf24", ("AWS と Docker で環境を構築し、", "GitHub Actions でデプロイ。"), ("AWS", "Docker", "Actions")),
-    ("AI", "sparkles", "#c084fc", ("Gemini API で生成 AI 機能を", "組み込み。開発は Claude Code と。"), ("Gemini", "Claude Code", "Cursor")),
+    ("AI", "sparkles", "#c084fc", ("Gemini API で生成 AI 機能を", "プロダクトに組み込む。"), ("Gemini API", "FastAPI", "Ollama")),
 ]
 
-PROFILE_ROWS = [("role", "Software Engineer"), ("focus", "Web / Mobile / API / AI"), ("langs", "TypeScript / PHP / Python"), ("fuel", "tea ☕")]
+PROFILE_ROWS = [
+    ("role", "Software Engineer"), ("focus", "Web / Mobile / API / AI"),
+    ("langs", "TypeScript / PHP / Python"), ("writes", "zenn.dev/hopetekigozaru"), ("hobby", "guitar 🎸"),
+]
+
+# (ラベル, タイトル, アイコン, アクセント色, 説明 2 行, タグ, 演出, 幅)
+HIGHLIGHTS = [
+    ("SPECIALTY", "Parallel Development", "branch", "#34d399",
+     ("Claude Code と git worktree で、", "複数のタスクを同時並行で開発する。"), ("Claude Code", "git worktree"), "worktree", 480),
+    ("SIDE PROJECT", "undug", "music", "#f472b6",
+     ("インディーズバンドの音楽・ライブ・", "リリースに出会えるプラットフォーム。"), ("Next.js", "NestJS", "Expo"), None, 312),
+    ("LEARNING", "Video Generation", "clapper", "#38bdf8",
+     ("Remotion と Three.js で、", "コードから動画をつくる勉強中。"), ("Remotion", "Three.js"), "cube", 312),
+]
+
+
+def worktree_visual(x: float, y: float, w: float, h: float) -> str:
+    """main から worktree が分かれて戻る様子と、その上を走るエージェント。"""
+    main_y = y + h / 2
+    x0, x1 = x, x + w
+    lanes = [(-44, 8, 36, "#818cf8"), (44, 36, 8, "#f472b6"), (-20, 62, 56, "#22d3ee")]
+    out = [f'<line x1="{x0}" y1="{main_y}" x2="{x1}" y2="{main_y}" stroke="#a1a1aa" stroke-opacity=".5" stroke-width="2"/>',
+           f'<text x="{x0}" y="{main_y + 18}" class="mono" font-size="10" fill="#71717a">main</text>']
+    for i, (dy, ls, rs, color) in enumerate(lanes):
+        sx, ex, ly = x0 + ls, x1 - rs, main_y + dy
+        d = f"M{sx} {main_y} C{sx + 16} {main_y} {sx + 14} {ly} {sx + 32} {ly} L{ex - 32} {ly} C{ex - 14} {ly} {ex - 16} {main_y} {ex} {main_y}"
+        out.append(f'<path d="{d}" fill="none" stroke="{color}" stroke-opacity=".6" stroke-width="2"/>')
+        straight = ex - sx - 88
+        for k in range(3 if straight > 60 else 1):
+            cx = sx + 44 + (k * straight / 2 if straight > 60 else straight / 2)
+            out.append(f'<circle cx="{cx:.1f}" cy="{ly}" r="3.5" fill="{BG}" stroke="{color}" stroke-width="2"/>')
+        out.append(f'<text x="{ex - 32}" y="{ly - 8}" text-anchor="end" class="mono" font-size="10" fill="{color}" fill-opacity=".8">wt-{i + 1}</text>')
+        out.append(f'<circle r="5" fill="{color}"><animateMotion dur="{3.2 + i * .6:.1f}s" begin="{i * .9:.1f}s" repeatCount="indefinite" path="{d}"/></circle>')
+    out += [f'<circle cx="{x0 + 4}" cy="{main_y}" r="4" fill="#a1a1aa"/>', f'<circle cx="{x1 - 4}" cy="{main_y}" r="4" fill="#a1a1aa"/>']
+    return "".join(out)
+
+
+def cube_visual(x: float, y: float, w: float, h: float) -> str:
+    """Y 軸回転する立方体のワイヤーフレーム。"""
+    import math
+    cx, cy, size = x + w / 2, y + h / 2, min(w, h) / 3.4
+    verts = [(a, b, c) for a in (-1, 1) for b in (-1, 1) for c in (-1, 1)]
+    edges = [(i, j) for i in range(8) for j in range(i + 1, 8) if sum(p != q for p, q in zip(verts[i], verts[j])) == 1]
+    tilt = math.radians(-24)
+    frames = []
+    for f in range(25):
+        t = math.radians(30 + f * 90 / 24)
+        pts = []
+        for vx, vy, vz in verts:
+            rx, rz = vx * math.cos(t) + vz * math.sin(t), -vx * math.sin(t) + vz * math.cos(t)
+            ry = vy * math.cos(tilt) - rz * math.sin(tilt)
+            pts.append((cx + rx * size, cy + ry * size))
+        frames.append(" ".join(f"M{pts[i][0]:.1f} {pts[i][1]:.1f}L{pts[j][0]:.1f} {pts[j][1]:.1f}" for i, j in edges))
+    return (f'<path d="{frames[0]}" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linejoin="round">'
+            f'<animate attributeName="d" values="{";".join(frames)}" dur="3s" repeatCount="indefinite"/></path>')
+
+
+def card_head(x: float, y: float, icon: str, accent: str, title: str) -> str:
+    return (f'<rect x="{x + 24}" y="{y + 22}" width="40" height="40" rx="11" fill="{accent}" fill-opacity=".14" stroke="{accent}" stroke-opacity=".4"/>'
+            f'<g transform="translate({x + 34} {y + 32}) scale(.8333)" fill="none" stroke="{accent}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">{ICON_PATHS[icon]}</g>'
+            f'<text x="{x + 78}" y="{y + 48}" class="sans" font-size="18" font-weight="700" fill="#fafafa">{title}</text>')
+
+
+def chips_row(x: float, y: float, tags: tuple[str, ...], accent: str) -> str:
+    out, cx = [], x
+    for t in tags:
+        cw = len(t) * 7.2 + 20
+        out.append(f'<rect x="{cx:.1f}" y="{y}" width="{cw:.1f}" height="22" rx="11" fill="{accent}" fill-opacity=".1" stroke="{accent}" stroke-opacity=".35"/>'
+                   f'<text x="{cx + cw / 2:.1f}" y="{y + 15}" text-anchor="middle" class="mono" font-size="11.5" fill="#e4e4e7">{escape(t)}</text>')
+        cx += cw + 8
+    return "".join(out)
 
 
 def build_about() -> str:
     w, pad, gap, top = 1200, 32, 16, 112
     card_h = 170
     intro_w, intro_h = 400, card_h * 2 + gap
-    h = top + intro_h + pad
+    spec_h = 190
+    h = top + intro_h + gap + spec_h + pad
     ix, iy = pad, top
 
     rows = "".join(
-        f'<text x="{ix + 28}" y="{iy + 236 + i * 30}" class="mono" font-size="13.5" xml:space="preserve">'
+        f'<text x="{ix + 28}" y="{iy + 232 + i * 26}" class="mono" font-size="13.5" xml:space="preserve">'
         f'<tspan fill="#7dd3fc">{k}</tspan><tspan fill="#52525b" x="{ix + 100}">→</tspan>'
         f'<tspan fill="#e4e4e7" x="{ix + 124}">{escape(v)}</tspan></text>'
         for i, (k, v) in enumerate(PROFILE_ROWS))
@@ -357,7 +436,7 @@ def build_about() -> str:
       <text x="{ix + 26}" y="{iy + 96}" class="sans" font-size="40" font-weight="800" letter-spacing="-1.5" fill="#fafafa">Hi, I’m Nozomu.</text>
       <text x="{ix + 28}" y="{iy + 140}" class="sans" font-size="15" fill="#a1a1aa">画面・API・インフラ・生成 AI まで、</text>
       <text x="{ix + 28}" y="{iy + 166}" class="sans" font-size="15" fill="#a1a1aa">つくるものに合わせて手を動かしています。</text>
-      <rect x="{ix + 28}" y="{iy + 198}" width="{intro_w - 56}" height="1" fill="#fff" fill-opacity=".08"/>
+      <rect x="{ix + 28}" y="{iy + 196}" width="{intro_w - 56}" height="1" fill="#fff" fill-opacity=".08"/>
       {rows}
     </g>'''
 
@@ -367,24 +446,33 @@ def build_about() -> str:
         r, c = divmod(i, 2)
         x = ix + intro_w + gap + c * (cw + gap)
         y = top + r * (card_h + gap)
-        chips, chip_x = [], x + 24
-        for t in tags:
-            cw_chip = len(t) * 7.2 + 20
-            chips.append(f'<rect x="{chip_x:.1f}" y="{y + 128}" width="{cw_chip:.1f}" height="22" rx="11" fill="{accent}" fill-opacity=".1" stroke="{accent}" stroke-opacity=".35"/>'
-                         f'<text x="{chip_x + cw_chip / 2:.1f}" y="{y + 143}" text-anchor="middle" class="mono" font-size="11.5" fill="#e4e4e7">{escape(t)}</text>')
-            chip_x += cw_chip + 8
         cards.append(f'''<g class="rise" style="animation-delay:{.25 + i * .12:.2f}s">
       {glass_card(x, y, cw, card_h, accent, f"gabout{i}", 2 + i * 1.3)}
-      <rect x="{x + 24}" y="{y + 22}" width="40" height="40" rx="11" fill="{accent}" fill-opacity=".14" stroke="{accent}" stroke-opacity=".4"/>
-      <g transform="translate({x + 34} {y + 32}) scale(.8333)" fill="none" stroke="{accent}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">{ICON_PATHS[icon]}</g>
-      <text x="{x + 78}" y="{y + 48}" class="sans" font-size="18" font-weight="700" fill="#fafafa">{title}</text>
+      {card_head(x, y, icon, accent, title)}
       <text x="{x + cw - 24}" y="{y + 46}" text-anchor="end" class="mono" font-size="12" fill="#52525b">{i + 1:02d}</text>
       <text x="{x + 24}" y="{y + 92}" class="sans" font-size="14" fill="#a1a1aa">{escape(desc[0])}</text>
       <text x="{x + 24}" y="{y + 114}" class="sans" font-size="14" fill="#a1a1aa">{escape(desc[1])}</text>
-      {"".join(chips)}
+      {chips_row(x + 24, y + 128, tags, accent)}
     </g>''')
 
+    sy, x = top + intro_h + gap, pad
+    visuals = {"worktree": lambda bx, bw: worktree_visual(bx + bw - 214, sy + 26, 190, spec_h - 52),
+               "cube": lambda bx, bw: cube_visual(bx + bw - 76, sy + 112, 56, 56)}
+    for i, (label, title, icon, accent, desc, tags, visual, bw) in enumerate(HIGHLIGHTS):
+        cards.append(f'''<g class="rise" style="animation-delay:{.75 + i * .12:.2f}s">
+      {glass_card(x, sy, bw, spec_h, accent, f"gspec{i}", 3 + i * 1.5)}
+      {card_head(x, sy, icon, accent, title)}
+      <rect x="{x + 78}" y="{sy + 62}" width="{len(label) * 7.6 + 18:.1f}" height="18" rx="9" fill="{accent}" fill-opacity=".14"/>
+      <text x="{x + 87}" y="{sy + 75}" class="mono" font-size="10" letter-spacing="1.5" fill="{accent}">{label}</text>
+      <text x="{x + 24}" y="{sy + 114}" class="sans" font-size="14" fill="#d4d4d8">{escape(desc[0])}</text>
+      <text x="{x + 24}" y="{sy + 136}" class="sans" font-size="14" fill="#d4d4d8">{escape(desc[1])}</text>
+      {chips_row(x + 24, sy + 152, tags, accent)}
+      {visuals[visual](x, bw) if visual else ""}
+    </g>''')
+        x += bw + gap
+
     summary = "。".join(f"{t}: {d[0]}{d[1]}" for t, _, _, d, _ in ABOUT_CARDS)
+    summary += "。" + "。".join(f"{lb}: {t} — {d[0]}{d[1]}" for lb, t, _, _, d, *_ in HIGHLIGHTS)
     return f'''<svg xmlns="http://www.w3.org/2000/svg" width="{w}" height="{h}" viewBox="0 0 {w} {h}" role="img" aria-labelledby="t d">
   <title id="t">About — Hi, I’m Nozomu.</title>
   <desc id="d">画面・API・インフラ・生成 AI まで、つくるものに合わせて手を動かしています。{escape(summary)}</desc>
@@ -412,8 +500,8 @@ def build_footer() -> str:
   </style>
   <g clip-path="url(#frame)">
     {backdrop(w, h, [(300, 160, 160, "#4f46e5", .45), (900, -40, 160, "#be185d", .35)], grid=40)}
-    <text x="{w / 2}" y="58" text-anchor="middle" class="sans" font-size="20" font-weight="600" fill="#fafafa" letter-spacing="-.3">Thanks for visiting ☕</text>
-    <text x="{w / 2}" y="84" text-anchor="middle" class="mono" font-size="12" fill="#71717a" letter-spacing="2">@hosokaSfi</text>
+    <text x="{w / 2}" y="58" text-anchor="middle" class="sans" font-size="20" font-weight="600" fill="#fafafa" letter-spacing="-.3">Thanks for visiting</text>
+    <text x="{w / 2}" y="84" text-anchor="middle" class="mono" font-size="12" fill="#71717a" letter-spacing="1.5">github.com/hosokaSfi  ·  zenn.dev/hopetekigozaru</text>
     {frame_border(w, h)}
   </g>
 </svg>

@@ -1,4 +1,4 @@
-name: Generate contribution snake
+name: Generate profile assets
 
 on:
   schedule:
@@ -15,12 +15,17 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
+      - uses: actions/checkout@v7
+
       - uses: Platane/snk/svg-only@v3
         with:
           github_user_name: ${{ github.repository_owner }}
           outputs: |
             dist/github-snake.svg?color_snake=#db2777&color_dots=#ebedf0,#c7d2fe,#818cf8,#6366f1,#4338ca
             dist/github-snake-dark.svg?color_snake=#f472b6&color_dots=#161b22,#312e81,#4f46e5,#818cf8,#c7d2fe
+
+      - name: Generate Zenn card
+        run: python3 scripts/build_zenn.py dist/zenn.svg
 
       - uses: crazy-max/ghaction-github-pages@v5
         with:
